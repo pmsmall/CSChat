@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<config>
+  <database_config>
+    <connect ip="127.0.0.1" port="1521" database="orl" user_name="frank" password="123456" />
+    <driver>oracle.jdbc.OracleDriver</driver>
+  </database_config>
+  
+  <buffer_config maxSize="256"/>
+</config>

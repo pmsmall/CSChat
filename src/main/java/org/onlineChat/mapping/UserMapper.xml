@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.onlineChat.dao.IUserDao">
+
+  <resultMap id="BaseResultMap" type="org.onlineChat.pojo.User">
+    <id column="USERID" property="userid" jdbcType="VARCHAR"/>
+    <result column="PASSWORD" property="password" jdbcType="NVARCHAR"/>
+    <result column="NICKNAME" property="nickname" jdbcType="NVARCHAR"/>
+    <result column="SEX" property="sex" jdbcType="NUMERIC"/>
+    <result column="AGE" property="age" jdbcType="NUMERIC"/>
+    <result column="PROFILEHEAD" property="profilehead" jdbcType="VARCHAR"/>
+    <result column="PROFILE" property="profile" jdbcType="NVARCHAR"/>
+    <result column="FIRSTTIME" property="firsttime" jdbcType="VARCHAR"/>
+    <result column="LASTTIME" property="lasttime" jdbcType="VARCHAR"/>
+    <result column="STATUS" property="status" jdbcType="NUMERIC"/>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    USERID, PASSWORD, NICKNAME, SEX, AGE, PROFILEHEAD, PROFILE, FIRSTTIME, LASTTIME, STATUS
+  </sql>
+
+  <!-- 查询所有用户 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+      <![CDATA[
+      SELECT  USERID, PASSWORD, NICKNAME, SEX, AGE, PROFILEHEAD, PROFILE, FIRSTTIME, LASTTIME, STATUS FROM chat_user
+      WHERE ROWNUM >= #{offset} AND ROWNUM <= #{limit}
+      ORDER BY FIRSTTIME
+      ]]>
+  </select>
+
+  <!-- 根据用户id查询用户 -->
+  <select id="selectUserByUserid" resultMap="BaseResultMap" parameterType="string">
+    SELECT <include refid="Base_Column_List"/>
+    FROM chat_user
+    WHERE USERID = #{userid, jdbcType=VARCHAR}
+  </select>
+
+  <!-- 根据用户id查询用户 -->
+  <select id="selectCount" resultMap="BaseResultMap" >
+    SELECT COUNT(*) USERID
+    FROM chat_user
+  </select>
+
+  <!-- 插入用户 -->
+  <insert id="insert" parameterType="org.onlineChat.pojo.User">
+    INSERT INTO chat_user (USERID, PASSWORD, NICKNAME, SEX, AGE, PROFILEHEAD, PROFILE, FIRSTTIME, LASTTIME, STATUS)
+    VALUES (#{userid, jdbcType=VARCHAR}, #{password, jdbcType=NVARCHAR}, #{nickname, jdbcType=NVARCHAR}, #{sex, jdbcType=NUMERIC},
+    #{age, jdbcType=NUMERIC}, #{profilehead, jdbcType=VARCHAR}, #{profile, jdbcType=NVARCHAR},
+    #{firsttime, jdbcType=VARCHAR}, #{lasttime, jdbcType=VARCHAR}, #{status, jdbcType=NUMERIC})
+  </insert>
+
+  <!-- 更新用户 -->
+  <update id="update" parameterType="org.onlineChat.pojo.User">
+    UPDATE chat_user
+    <set>
+      <if test="password != null and password != ''">
+        PASSWORD = #{password, jdbcType=NVARCHAR},
+      </if>
+      <if test="nickname != null and nickname != ''">
+        NICKNAME = #{nickname, jdbcType=NVARCHAR},
+      </if>
+      <if test="sex != null and sex != ''">
+        SEX = #{sex, jdbcType=NUMERIC},
+      </if>
+      <if test="age != null and age != ''">
+        AGE = #{age, jdbcType=NUMERIC},
+      </if>
+      <if test="profilehead != null and profilehead != ''">
+        PROFILEHEAD = #{profilehead, jdbcType=VARCHAR},
+      </if>
+      <if test="profile != null and profile != ''">
+        PROFILE = #{profile, jdbcType=NVARCHAR},
+      </if>
+      <if test="firsttime != null and firsttime != ''">
+        FIRSTTIME = #{firsttime, jdbcType=VARCHAR},
+      </if>
+      <if test="lasttime != null and lasttime != ''">
+        LASTTIME = #{lasttime, jdbcType=VARCHAR},
+      </if>
+      <if test="status != null and status != ''">
+        STATUS = #{status, jdbcType=NUMERIC},
+      </if>
+    </set>
+    WHERE USERID = #{userid, jdbcType=VARCHAR}
+  </update>
+
+  <!-- 删除用户 -->
+  <delete id="delete" parameterType="string">
+    DELETE FROM chat_user
+    WHERE USERID = #{userid, jdbcType=VARCHAR}
+  </delete>
+
+</mapper>

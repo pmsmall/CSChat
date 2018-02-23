@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.onlineChat.dao.ILogDao">
+
+    <resultMap id="BaseResultMap" type="org.onlineChat.pojo.Log">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="USERID" property="userid" jdbcType="VARCHAR"/>
+        <result column="TIME" property="time" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp" />
+        <result column="TYPE" property="type" jdbcType="NVARCHAR"/>
+        <result column="DETAIL" property="detail" jdbcType="NVARCHAR"/>
+        <result column="IP" property="ip" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ID, USERID, TIME, TYPE, DETAIL, IP
+  </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT id, userid, time, type, detail, ip
+        FROM chat_log
+        WHERE ROWNUM >= #{offset} AND ROWNUM <= #{limit}
+        ORDER BY TIME DESC
+        ]]>
+  </select>
+
+  <select id="selectLogByUserid" resultMap="BaseResultMap">
+		<![CDATA[
+        SELECT id, userid, time, type, detail, ip
+        FROM chat_log
+        WHERE USERID = #{userid, jdbcType=VARCHAR}
+        AND ROWNUM >= #{offset} AND ROWNUM <= #{limit}
+        ORDER BY TIME DESC
+        ]]>
+  </select>
+
+    <select id="selectCount" resultMap="BaseResultMap">
+        SELECT COUNT(*) USERID FROM chat_log
+    </select>
+
+    <select id="selectCountByUserid" resultMap="BaseResultMap">
+    SELECT COUNT(*) USERID FROM chat_log
+    WHERE USERID = #{userid, jdbcType=VARCHAR}
+  </select>
+
+    <insert id="insert" parameterType="org.onlineChat.pojo.Log">
+    INSERT INTO chat_log (ID, USERID, TIME, TYPE, DETAIL, IP)
+    VALUES (#{id, jdbcType=VARCHAR}, #{userid, jdbcType=VARCHAR}, #{time, jdbcType=DATE}, #{type, jdbcType=NVARCHAR},
+    #{detail, jdbcType=NVARCHAR}, #{ip, jdbcType=VARCHAR})
+  </insert>
+
+    <delete id="delete" parameterType="string">
+    DELETE FROM chat_log
+    WHERE ID = #{id, jdbcType=VARCHAR}
+  </delete>
+
+    <delete id="deleteThisUser" parameterType="string">
+    DELETE FROM chat_log
+    WHERE USERID = #{userid, jdbcType=VARCHAR}
+  </delete>
+
+    <delete id="deleteAll">
+    DELETE FROM chat_log
+  </delete>
+
+</mapper>
